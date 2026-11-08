@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e4f3f">
+<title>Insaniyat Welfare Trust: Rs. 100 can change a life</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#f7faf8;--surface:#fff;--ink:#12261f;--muted:#5b6b64;--brand:#0e4f3f;--on-brand:#fff;--soft:#e4f1ec;--gold:#f0b429;--gold-ink:#2b1d00;--line:#d9e5df;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c1713;--surface:#14241d;--ink:#e8f2ed;--muted:#9bb0a6;--brand:#46c9a1;--on-brand:#06201a;--soft:#1a2e26;--line:#26392f}}
+:root[data-theme="dark"]{--bg:#0c1713;--surface:#14241d;--ink:#e8f2ed;--muted:#9bb0a6;--brand:#46c9a1;--on-brand:#06201a;--soft:#1a2e26;--line:#26392f}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+html[lang=en]{--lh:1.6;--hl:1.2;--ff:'Nunito',system-ui,sans-serif}
+html[lang=ur]{--lh:2;--hl:2.1;--ff:'Noto Nastaliq Urdu','Nunito',system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/var(--lh) var(--ff);-webkit-text-size-adjust:100%}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--brand);text-decoration:none}
+.brand svg{width:38px;height:38px;flex:none}
+.btn{font:700 1.1rem/1.6 var(--ff);border:0;border-radius:14px;padding:12px 30px;min-height:48px;cursor:pointer;background:var(--gold);color:var(--gold-ink);box-shadow:0 4px 0 rgba(0,0,0,.16)}
+.btn:active{transform:translateY(2px)}
+.btn.ghost{background:transparent;color:var(--brand);box-shadow:none;border:2px solid var(--brand);font-size:.9rem;padding:4px 16px;min-height:40px}
+.btn.sm{font-size:.95rem;padding:6px 20px;min-height:42px;background:var(--brand);color:var(--on-brand);box-shadow:none}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;padding:28px 0 40px}
+h1{font-size:clamp(1.6rem,4.6vw,2.6rem);line-height:var(--hl);margin:0 0 10px;color:var(--brand)}
+h2{font-size:1.4rem;line-height:var(--hl);margin:0 0 4px;color:var(--brand)}
+.lead,.sub{color:var(--muted);margin:0 0 20px;font-size:1rem}
+.pts{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:18px;color:var(--muted);font-size:.85rem}
+.art{background:var(--soft);border-radius:28px;aspect-ratio:1/1;display:grid;place-items:center}
+.art svg{width:78%;height:auto}
+section{padding:30px 0;border-top:1px solid var(--line)}
+.rows{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 28px}
+.row{display:flex;gap:14px;align-items:center}
+.ic{flex:none;width:54px;height:54px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:1.6rem;line-height:1}
+.row b{display:block}.row span{color:var(--muted);font-size:.88rem;display:block}
+.scroller{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.tile{flex:none;width:170px;scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.tile i{display:grid;place-items:center;height:104px;font-style:normal;font-size:2.4rem;background:linear-gradient(135deg,var(--soft),var(--line))}
+.tile p{margin:0;padding:6px 12px;font-size:.92rem}
+.empty{background:var(--surface);border:2px dashed var(--line);border-radius:18px;padding:18px;text-align:center;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.tab{border:2px solid var(--brand);background:transparent;color:var(--brand);border-radius:999px;padding:3px 20px;font:700 .95rem/1.8 var(--ff);cursor:pointer;min-height:42px}
+.tab[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
+.tool{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;align-items:start}
+.tool[hidden]{display:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px}
+label{display:block;font-weight:700;font-size:.88rem;margin:8px 0 2px}
+input:not([type=checkbox]):not([type=range]),select,textarea{width:100%;font-size:.95rem;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);line-height:1.5}
+textarea{min-height:64px;resize:vertical}
+.two{display:flex;gap:10px}.two>*{flex:1}
+#cvbox{overflow:hidden;min-width:0;border-radius:6px}#cvscale{width:794px;transform-origin:top left}
+#cv{width:794px;background:#fff;color:#1b1b1b;box-shadow:0 0 0 1px var(--line);padding:30px;font:15px/1.55 'Nunito',sans-serif;direction:ltr;text-align:left;overflow-wrap:anywhere;min-height:1120px;display:flex;flex-direction:column}#cv .cvm{flex:1}#cv li{margin:4px 0}#cv .chips.col span{display:table;border-radius:14px}#cv.t5 .chips.col span{display:block}#cv.t5 .chips.col span::after{content:none!important}
+#cv h1{font:800 36px/1.2 'Nunito',sans-serif;margin:0;color:#12261f}
+#cv .cvh{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+#cv .cvh img{width:104px;height:104px;border-radius:50%;object-fit:cover}
+#cv .cvh p{margin:2px 0 0;color:#0e4f3f;font-weight:700}
+#cv h4{margin:20px 0 6px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#0e4f3f;border-bottom:2px solid #0e4f3f;padding-bottom:2px}
+#cv ul{margin:4px 0;padding-left:20px}#cv p{margin:4px 0}
+#cv .chips span{display:inline-block;background:#e4f1ec;color:#0e4f3f;border-radius:999px;padding:2px 13px;margin:3px 5px 3px 0;font-size:13px}
+#cv.t1 .cvh{flex-direction:column;text-align:center;border-bottom:3px double #0e4f3f;padding-bottom:12px}
+#cv.t2 .cvh{background:#0e4f3f;margin:-30px -30px 18px;padding:26px 30px}
+#cv.t2 .cvh h1{color:#fff}#cv.t2 .cvh p{color:#f0b429}
+#cv.t3 .cvm{display:grid;grid-template-columns:34% 1fr;gap:18px}
+#cv.t3 aside{background:#0e4f3f;color:#fff;padding:12px 14px;border-radius:8px}
+#cv.t3 aside h4{color:#f0b429;border-color:#f0b429}#cv.t3 aside .chips span{background:rgba(255,255,255,.16);color:#fff}
+#cv.t4 .cvm,#cv.t6 .cvm,#cv.t8 .cvm{display:grid;grid-template-columns:34% 1fr;gap:18px}
+#cv.t4 .cvh{background:#0f2742;margin:-30px -30px 18px;padding:24px 26px;border-bottom:4px solid #c9a227}
+#cv.t4 .cvh h1{color:#fff;letter-spacing:.04em}#cv.t4 .cvh p{color:#e5c76b;letter-spacing:.14em;text-transform:uppercase;font-size:12px}
+#cv.t4 .cvh img{border:3px solid #c9a227}#cv.t4 aside{background:#eef2f7;padding:12px 14px;border-radius:6px}
+#cv.t4 h4{color:#0f2742;border-color:#c9a227}#cv.t4 .chips span{background:#0f2742;color:#fff}
+#cv.t5{font-family:Georgia,'Times New Roman',serif;padding:34px 38px}
+#cv.t5 .cvh{flex-direction:column;text-align:center;border-bottom:1px solid #222;padding-bottom:12px}
+#cv.t5 .cvh h1{font:400 30px/1.2 Georgia,serif;letter-spacing:.2em;text-transform:uppercase}
+#cv.t5 .cvh p{color:#555;font-weight:400;letter-spacing:.2em;text-transform:uppercase;font-size:12px}
+#cv.t5 h4{color:#111;border-bottom:1px solid #999;font-weight:400;letter-spacing:.2em}
+#cv.t5 .chips span{background:none;color:#222;padding:0;margin:0 4px 0 0;border-radius:0;font-size:13px}
+#cv.t5 .chips span:not(:last-child)::after{content:" \00B7";margin-left:4px}
+#cv.t5 .cvm{display:grid;grid-template-columns:30% 1fr;gap:22px}
+#cv.t6 .cvh{background:linear-gradient(120deg,#0d9488,#22c55e);margin:-30px -30px 18px;padding:26px;border-radius:6px 6px 0 0}
+#cv.t6 .cvh h1{color:#fff}#cv.t6 .cvh p{color:#ecfdf5}
+#cv.t6 .cvh img{border:4px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.2)}#cv.t6 aside{background:#f0fdfa;padding:12px 14px;border-radius:10px}
+#cv.t6 h4{border:0;border-left:5px solid #0d9488;padding-left:8px;color:#0f766e}#cv.t6 .chips span{background:#ccfbf1;color:#0f766e}
+#cv.t7 .cvh{border-left:6px solid #7c3aed;padding-left:14px}
+#cv.t7 .cvh h1{color:#4c1d95}#cv.t7 .cvh p{color:#7c3aed}#cv.t7 h4{color:#4c1d95;border-color:#ddd6fe}
+#cv.t7 main ul{list-style:none;padding-left:16px;border-left:2px solid #ddd6fe;margin-left:4px}
+#cv.t7 main li{position:relative;margin:6px 0}
+#cv.t7 main li::before{content:"";position:absolute;left:-23px;top:7px;width:10px;height:10px;border-radius:50%;background:#7c3aed}
+#cv.t7 .chips span{background:#ede9fe;color:#4c1d95}
+#cv.t8 .cvh{border-bottom:3px solid #1d4ed8;padding-bottom:12px}
+#cv.t8 .cvh h1{color:#1e3a8a;text-transform:uppercase;letter-spacing:.05em}#cv.t8 .cvh p{color:#1d4ed8}
+#cv.t8 aside{border-right:1px solid #cbd5e1;padding-right:14px}
+#cv.t8 h4{color:#fff;background:#1d4ed8;border:0;padding:3px 10px;border-radius:3px}#cv.t8 .chips span{background:#dbeafe;color:#1e3a8a}
+#out img{max-width:100%;border-radius:10px;border:1px solid var(--line);margin-top:10px}
+.note{font-size:.8rem;color:var(--muted)}
+.about{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.aph{width:150px;height:150px;border-radius:50%;background:var(--soft);border:4px solid var(--brand);display:grid;place-items:center;font-size:3.4rem;overflow:hidden;flex:none}
+.aph img{width:100%;height:100%;object-fit:cover}
+.about h3{margin:0;font-size:1.3rem}.abr{margin:0;color:var(--brand);font-weight:700}
+.thanks{margin-top:26px;background:var(--brand);color:var(--on-brand);border-radius:22px;padding:24px 26px;text-align:center}.thanks h2{color:inherit}
+.wallnote{margin-top:14px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--soft);border-radius:16px;padding:14px 18px}.wallnote p{margin:0;flex:1 1 260px}.wa3{text-decoration:none;display:inline-block}
+.dsl{direction:ltr;overflow:hidden;border-radius:16px;background:var(--soft);padding:10px 0}
+.dtrack{display:flex;gap:12px;width:max-content;animation:dslide 34s linear infinite}
+.dtrack.still{animation:none;margin:0 auto}
+.dsl:hover .dtrack{animation-play-state:paused}
+@keyframes dslide{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.dtrack{animation:none}.dsl{overflow-x:auto}}
+.dc{position:relative;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 16px 8px 8px;min-width:210px}
+.dc img,.dc .av{width:48px;height:48px;border-radius:10px;object-fit:cover;flex:none}
+.dc img{cursor:pointer}.dc .av{display:grid;place-items:center;background:var(--soft);font-size:1.4rem}
+.dc b,.dc span{display:block;unicode-bidi:plaintext;line-height:1.5}.dc b{font-size:.95rem}.dc span{font-size:.8rem;color:var(--muted)}
+.ddel{position:absolute;top:-6px;right:-6px;background:#dc2626;color:#fff;border:0;border-radius:999px;min-width:24px;height:24px;font-size:.7rem;cursor:pointer}
+.ggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (min-width:720px){.ggrid{grid-template-columns:repeat(4,1fr)}}
+.gt{position:relative;display:block;width:100%;border:1px solid var(--line);background:var(--surface);border-radius:18px;overflow:hidden;padding:0;cursor:pointer;text-align:start;color:inherit;font:inherit}
+.gt .c0{aspect-ratio:1/1;display:grid;place-items:center;font-size:2.6rem;background:linear-gradient(135deg,var(--soft),var(--line))}
+.gt img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.gt p{margin:0;padding:4px 12px;font-weight:700;font-size:.95rem}
+.badge{position:absolute;top:8px;inset-inline-start:8px;background:rgba(10,40,30,.85);color:#fde68a;border-radius:999px;padding:0 10px;font:700 12px/1.8 'Nunito',sans-serif}
+.ghead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gp{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:55vh;overflow-y:auto;padding:4px 0}
+.gi{position:relative}.gi img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;cursor:pointer;display:block}
+.gdel{position:absolute;top:4px;inset-inline-end:4px;background:#dc2626;color:#fff;border:0;border-radius:999px;min-width:30px;height:30px;cursor:pointer}
+#gdlg{width:min(560px,94vw)}#lb{width:min(900px,96vw);background:transparent;box-shadow:none;padding:0}
+#lb img{width:100%;max-height:80vh;object-fit:contain;border-radius:12px;background:#000;display:block}
+footer{padding:26px 0 90px;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+.mbar{display:none}
+dialog{border:0;border-radius:22px;padding:0;width:min(460px,92vw);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.dlg{padding:22px}
+.chips2{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.chip{border:2px solid var(--brand);background:transparent;color:var(--brand);border-radius:999px;padding:2px 18px;font:700 .95rem/1.9 'Nunito',sans-serif;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--on-brand)}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--soft);border-radius:14px;padding:6px 14px;margin:8px 0;line-height:1.6}
+.acct small{display:block;color:var(--muted);font-size:.78rem}
+.acct strong{font-family:'Nunito',sans-serif;overflow-wrap:anywhere}
+.acct button{border:1px solid var(--brand);background:transparent;color:var(--brand);border-radius:10px;padding:2px 14px;font:700 .8rem 'Nunito',sans-serif;cursor:pointer;min-height:34px}
+.wa{display:block;text-align:center;text-decoration:none;margin-top:12px}
+@media (max-width:720px){
+.hero{grid-template-columns:1fr;padding-top:10px}.art{aspect-ratio:16/10}.art svg{width:46%}
+.rows{grid-template-columns:1fr}
+.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line)}
+.mbar .btn{width:100%}
+
+}
+#printwrap{display:none}
+@media print{@page{size:A4;margin:0}html,body{margin:0!important;padding:0!important;background:#fff!important}body.printing>*:not(#printwrap){display:none!important}#printwrap{display:block}#printwrap #cv{width:210mm;min-height:296mm;margin:0;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 48 48" role="img" aria-label="Logo"><circle cx="24" cy="24" r="24" fill="var(--brand)"/><path d="M24 30c-6.500-4.600-10-7.800-10-11.800a5.400 5.400 0 0 1 10-2.800 5.400 5.400 0 0 1 10 2.800c0 4-3.500 7.200-10 11.800z" fill="#f0b429"/><path d="M8 29c4-1 7.500 0 10.500 2.300L24 35l5.500-3.700c3-2.300 6.500-3.300 10.500-2.300l-3 8.500L24 42 11 37.500z" fill="var(--on-brand)"/></svg>
+      <span data-t="brand"></span>
+    </a>
+    <span style="display:flex;gap:8px"><button class="btn ghost" type="button" id="lang">اردو</button><button class="btn ghost" type="button" data-donate data-t="nav"></button></span>
+  </div>
+
+  <header class="hero" id="top">
+    <div>
+      <h1 data-t="h1"></h1>
+      <p class="lead" data-t="lead"></p>
+      <button class="btn" type="button" data-donate data-t="cta"></button>
+      <div class="pts"><span>✔ <span data-t="p1"></span></span><span>✔ <span data-t="p2"></span></span><span>✔ <span data-t="p3"></span></span></div>
+    </div>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 200 180"><circle cx="100" cy="86" r="62" fill="var(--surface)"/><path d="M100 118c-23-16-36-27-36-41a19 19 0 0 1 36-10 19 19 0 0 1 36 10c0 14-13 25-36 41z" fill="#e05a47"/><path d="M18 118c14-3 28 0 40 8l42 22 42-22c12-8 26-11 40-8l-12 34-70 20-70-20z" fill="var(--brand)"/></svg>
+    </div>
+  </header>
+
+  <section id="gallery">
+    <h2 data-t="s2t"></h2><p class="sub" data-t="s2s"></p>
+    <div class="ggrid" id="ggrid"></div>
+  </section>
+
+  <section>
+    <h2 data-t="s1t"></h2><p class="sub" data-t="s1s"></p>
+    <div class="rows">
+      <div class="row"><div class="ic">😊</div><div><b data-t="r1t"></b><span data-t="r1d"></span></div></div>
+      <div class="row"><div class="ic">🏥</div><div><b data-t="r2t"></b><span data-t="r2d"></span></div></div>
+      <div class="row"><div class="ic">📚</div><div><b data-t="r3t"></b><span data-t="r3d"></span></div></div>
+      <div class="row"><div class="ic">💍</div><div><b data-t="r4t"></b><span data-t="r4d"></span></div></div>
+    </div>
+  </section>
+
+  
+  <section id="donors">
+    <h2 data-t="s3t"></h2><p class="sub" data-t="s3s"></p>
+    <div class="dsl" id="dsl" hidden><div class="dtrack" id="dtrack"></div></div>
+    <div class="empty" id="dnone"><span data-t="s3e"></span><br><button class="btn ghost" type="button" data-donate data-t="cta"></button></div>
+    <div class="wallnote"><p data-t="wall_msg"></p><a class="btn sm wa3" id="wa3" href="#" target="_blank" rel="noopener" data-t="wall_btn"></a></div>
+    <div class="card" id="dadmin" hidden style="margin-top:14px">
+      <div class="two"><label><span data-t="d_name"></span><input id="d_nm"></label><label><span data-t="d_amt"></span><input id="d_am" type="number" min="1" inputmode="numeric"></label></div>
+      <label><span data-t="d_rec"></span><input id="d_file" type="file" accept="image/*"></label>
+      <p class="note" data-t="d_hint"></p>
+      <button class="btn sm" type="button" id="d_add" data-t="d_btn"></button> <span class="note" id="d_note"></span>
+    </div>
+  </section>
+
+  <section id="tools">
+    <h2 data-t="s4t"></h2><p class="sub" data-t="s4s"></p>
+    <div class="tabs"><button class="tab" type="button" data-tool="cvp" aria-pressed="true" data-t="tab_cv"></button><button class="tab" type="button" data-tool="imgp" aria-pressed="false" data-t="tab_img"></button></div>
+
+    <div class="tool" id="cvp">
+      <div class="card">
+        <label><span data-t="l_name"></span><input id="c_name" placeholder="Ali Khan"></label>
+        <label><span data-t="l_title"></span><input id="c_title" placeholder="Graphic Designer"></label>
+        <div class="two"><label><span data-t="l_phone"></span><input id="c_phone" placeholder="+92 300 0000000"></label><label><span data-t="l_email"></span><input id="c_email" type="email" placeholder="ali@email.com"></label></div>
+        <label><span data-t="l_addr"></span><input id="c_addr" placeholder="Abbottabad, Pakistan"></label>
+        <div class="two"><label><span data-t="l_father"></span><input id="c_father" placeholder="Qayyum Awan"></label><label><span data-t="l_nat"></span><input id="c_nat" placeholder="Pakistani"></label></div>
+        <label><span data-t="l_cnic"></span><input id="c_cnic" inputmode="numeric" placeholder="00000-0000000-0"></label>
+        <label><span data-t="l_exp"></span><textarea id="c_exp" placeholder="Designer, ABC Company, 2022 to 2024"></textarea></label>
+        <label><span data-t="l_edu"></span><textarea id="c_edu" placeholder="BS Computer Science, 2024"></textarea></label>
+        <label><span data-t="l_cert"></span><textarea id="c_cert" placeholder="Digital Marketing Certificate, 2024"></textarea></label>
+        <label><span data-t="l_ref"></span><textarea id="c_ref" placeholder="Name, position, phone"></textarea></label>
+        <label><span data-t="l_skills"></span><input id="c_skills" placeholder="Photoshop, MS Word, Teamwork"></label>
+        <label><span data-t="l_lang"></span><input id="c_lang" placeholder="Urdu, English"></label>
+        <div class="two"><label><span data-t="l_photo"></span><input id="c_photo" type="file" accept="image/*"></label>
+        <label><span data-t="l_tpl"></span><select id="c_tpl"><option value="t1">Classic</option><option value="t2" selected>Modern</option><option value="t3">Sidebar</option><option value="t4">Executive</option><option value="t5">Minimal</option><option value="t6">Creative</option><option value="t7">Timeline</option><option value="t8">Corporate</option></select></label></div>
+        <p style="margin:14px 0 0"><button class="btn sm" type="button" id="printCv" data-t="print"></button> <button class="btn ghost" type="button" id="dlHtml" data-t="dlhtml"></button></p>
+      </div>
+      <div id="cvbox"><div id="cvscale"><div id="cv" aria-live="polite"></div></div></div>
+    </div>
+
+    <div class="tool" id="imgp" hidden>
+      <div class="card">
+        <label><span data-t="i_pick"></span><input id="i_file" type="file" accept="image/*"></label>
+        <div class="two"><label><span data-t="i_w"></span><input id="i_w" type="number" min="1"></label><label><span data-t="i_h"></span><input id="i_h" type="number" min="1"></label></div>
+        <label><input type="checkbox" id="i_lock" checked> <span data-t="i_lock"></span></label>
+        <div class="two"><label><span data-t="i_fmt"></span><select id="i_fmt"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>
+        <label><span data-t="i_q"></span><input id="i_q" type="range" min="0.3" max="1" step="0.05" value="0.85"></label></div>
+      </div>
+      <div class="card" id="out"><p class="sub" id="i_info" data-t="i_hint"></p></div>
+    </div>
+  </section>
+  <section id="about">
+    <div class="about"><div class="aph" id="aph">🤲</div>
+      <div style="flex:1 1 260px"><h2 data-t="ab_t"></h2><h3 id="abname"></h3><p class="abr" id="abrole" hidden></p><p id="abbio" style="margin:6px 0 0"></p></div></div>
+    <div class="card" id="aadmin" hidden style="margin-top:14px">
+      <div class="two"><label><span data-t="a_name"></span><input id="a_nm"></label><label><span data-t="a_role"></span><input id="a_rl"></label></div>
+      <label><span data-t="a_bio"></span><textarea id="a_bio_in"></textarea></label>
+      <label><span data-t="a_photo"></span><input id="a_file" type="file" accept="image/*"></label>
+      <button class="btn sm" type="button" id="a_save" data-t="a_btn"></button> <span class="note" id="a_note"></span>
+    </div>
+    <div class="thanks"><div style="font-size:2rem;line-height:1.5">🤲</div><h2 data-t="th_t"></h2><p data-t="th_b" style="margin:8px auto 0;max-width:620px;font-size:1.05rem;white-space:pre-line"></p></div>
+  </section>
+</div>
+<footer><span data-t="foot"></span><br><span class="note" data-t="notice"></span><br><a href="#" id="ownerLink" class="note" data-t="ol_in" hidden></a> <span class="note" id="olmsg"></span></footer>
+<div class="mbar"><button class="btn" type="button" data-donate data-t="cta" style="flex:1"></button></div>
+
+<dialog id="gdlg" aria-labelledby="gt">
+  <div class="dlg">
+    <div class="ghead"><h2 id="gt"></h2><button class="btn ghost" type="button" id="gclose" data-t="close"></button></div>
+    <p class="empty" id="gnone" data-t="nopics" hidden></p>
+    <div class="gp" id="gp"></div>
+    <div id="gadmin" hidden style="margin-top:12px"><label class="btn sm" style="display:inline-block;cursor:pointer;margin:0">📷 <span data-t="up"></span><input id="gfile" type="file" accept="image/*" multiple hidden></label> <span class="note" id="gnote"></span></div>
+  </div>
+</dialog>
+<dialog id="lb"><img id="lbi" alt=""><p style="text-align:center;margin:8px 0 0"><button class="btn" type="button" id="lbc">✕</button></p></dialog>
+
+<dialog id="dlg" aria-labelledby="dt">
+  <div class="dlg">
+    <h2 id="dt" data-t="dlg"></h2>
+    <div class="chips2" id="amts">
+      <button class="chip" type="button" data-a="100" aria-pressed="true">100</button><button class="chip" type="button" data-a="200" aria-pressed="false">200</button>
+      <button class="chip" type="button" data-a="500" aria-pressed="false">500</button><button class="chip" type="button" data-a="1000" aria-pressed="false">1000</button>
+    </div>
+    <div class="tabs"><button class="tab" type="button" id="tpk" aria-pressed="true" data-t="tab_pk"></button><button class="tab" type="button" id="tint" aria-pressed="false" data-t="tab_int"></button></div>
+    <div id="accts"></div>
+    <p class="note" id="intnote" data-t="int_note" hidden></p>
+    <a class="btn wa" id="wa" href="#" target="_blank" rel="noopener" data-t="wa"></a>
+    <p style="text-align:center;margin:10px 0 0"><button class="btn ghost" type="button" id="close" data-t="close"></button></p>
+  </div>
+</dialog>
+
+<script>
+/* ================= SITE SETTINGS: yahan apni cheezein likhein ================= */
+var SITE={
+  /* Gallery: har category ki photos ke path. Photos "photos" folder mein rakhein.
+     Misal: w1:["photos/ration1.jpg","photos/ration2.jpg"]
+     w1=Ration, w2=Medical, w3=School fees, w4=Wedding support */
+  gallery:{w1:[],w2:[],w3:[],w4:[]},
+  /* Donors ki slide. Misal: {name:"Ali Khan",amount:500,photo:"photos/receipt1.jpg"}  (photo likhna zaroori nahi) */
+  donors:[],
+  /* About us: apna naam, ohda, chand lines aur photo ka path */
+  about:{name:"Toqeer Qayyum Awan",role:"",bio:"",photo:""}
+};
+/* Apni asal details yahan likhein */
+var PK=[["Easypaisa","03494172737"],["Account title","Toqeer Qayyum Awan"],["Bank","Telenor Microfinance Bank (Easypaisa)"],["IBAN","PK44TMFB0000000018449915"],["JazzCash","03095967427"],["JazzCash title","Toqeer Qayyum"]];
+var INT=[["Account title","Toqeer Qayyum Awan"],["Bank","Telenor Microfinance Bank (Easypaisa)"],["IBAN","PK44TMFB0000000018449915"]];
+var PHONE="923494172737",amount=100,L="en",mode=PK;
+var T={en:{brand:"Insaniyat Welfare Trust",nav:"Donate",h1:"Just Rs. 100 can change someone’s life",lead:"A smile on a face, a patient’s treatment, a child’s education, a poor girl’s wedding. Small kindness, big impact.",p1:"Direct bank, Easypaisa and JazzCash",p2:"Receipt on WhatsApp",p3:"Daily work photos",cta:"Donate Rs. 100",
+s1t:"What Rs. 100 does",s1s:"Your gift supports these four causes.",r1t:"A smile on a face",r1d:"Bring joy to a sad heart",r2t:"Medical bills paid",r2d:"Support a patient’s treatment",r3t:"Help with education",r3d:"A child’s fees and books",r4t:"A poor girl’s wedding",r4d:"Ease the burden of a wedding",
+s2t:"Our daily work",s2s:"Photos of the help your donations make possible.",w1:"Ration drive",w2:"Medical camp",w3:"School fees",w4:"Wedding support",s3t:"Thank you to our donors",s3e:"The list is empty for now. The first name could be yours.",
+s4t:"Free tools",s4s:"Make a CV or resize a photo in seconds. Free, no sign-up.",tab_cv:"CV Maker",tab_img:"Image Resizer",
+l_name:"Full name",l_title:"Job title",l_phone:"Phone",l_email:"Email",l_addr:"Address",l_sum:"About you",l_exp:"Experience (one per line)",l_edu:"Education (one per line)",l_father:"Father’s name",l_nat:"Nationality",l_cnic:"ID card number (CNIC)",l_cert:"Certificates (one per line)",l_ref:"References (one per line)",l_skills:"Skills (comma separated)",l_lang:"Languages (comma separated)",l_photo:"Photo (optional)",l_tpl:"Style",print:"Download CV (PDF)",wait:"Preparing PDF...",dl:"Download",dlhtml:"Backup: save as web page",
+i_pick:"Choose a photo",i_w:"Width (px)",i_h:"Height (px)",i_lock:"Keep proportions",i_fmt:"Format",i_q:"Quality",i_hint:"Choose a photo to start.",i_res:"New size",
+dlg:"Donate",tab_pk:"Pakistan",tab_int:"From abroad",int_note:"Sending from abroad? Use an international bank transfer (IBAN and SWIFT), or message us on WhatsApp for other options.",wa:"Send receipt on WhatsApp",close:"Close",foot:"Insaniyat Welfare Trust. May your kindness be accepted.",notice:"We are a new community initiative and are not yet a registered organization.",msg:"Assalam o Alaikum! I donated Rs. {n}. Sending my receipt.",s3s:"Shared with the donors’ permission.",ab_t:"About us",ab_def:"We are a small team who believe that even Rs. 100 can bring a smile, pay a medical bill, help a child learn, or ease a poor girl’s wedding.",a_name:"Your name",a_role:"Role (for example, Founder)",a_bio:"A few lines about you",a_photo:"Your photo",a_btn:"Save",a_done:"Saved.",th_t:"From our hearts, thank you",th_b:"A hundred rupees may look small.\nBut for someone, it is a meal on the table, a medicine in the hand, a book in a child’s bag, and a smile that was missing for a long time.\n\nYou did not only give money. You gave hope to someone you may never meet.\nWe pray that every kindness you gave comes back to you in ways you cannot count.\n\nThank you for standing with us.",d_name:"Donor name",d_amt:"Amount (Rs.)",d_rec:"Receipt photo (optional)",d_hint:"Ask the donor first, and hide account and phone numbers on the receipt before uploading.",d_btn:"Add donor",d_need:"Please enter the name.",d_done:"Donor added.",ol_in:"Owner login",ol_out:"Log out",ol_bad:"This Google account is not allowed to edit the site.",ol_err:"Login failed.",wall_msg:"Want your name and photo on our donors wall? Donate, then message us on WhatsApp with your receipt and your permission.",wall_btn:"WhatsApp us with permission",msg3:"Assalam o Alaikum! I have donated. I give my permission to show my name and photo on your donors wall. My receipt is attached.",up:"Upload today’s photos",uperr:"Upload failed. Please try again.",updone:"Done! Photos saved.",nopics:"No photos here yet."},
+ur:{brand:"انسانیت ویلفیئر ٹرسٹ",nav:"عطیہ دیں",h1:"آپ کے صرف 100 روپے کسی کی زندگی بدل سکتے ہیں",lead:"کسی کے چہرے پر مسکراہٹ، کسی مریض کا علاج، کسی بچے کی تعلیم، اور کسی غریب بیٹی کی شادی۔ چھوٹی سی نیکی، بڑا اثر۔",p1:"بینک، ایزی پیسہ اور جاز کیش سے سیدھا",p2:"رسید واٹس ایپ پر",p3:"روزانہ کے کام کی تصویریں",cta:"100 روپے دیں",
+s1t:"100 روپے سے کیا ہوتا ہے",s1s:"آپ کا عطیہ ان چار کاموں میں مدد کرتا ہے۔",r1t:"چہرے پر مسکراہٹ",r1d:"کسی اداس دل کو خوشی دیں",r2t:"میڈیکل بل کی ادائیگی",r2d:"مریض کے علاج میں سہارا",r3t:"تعلیم میں مدد",r3d:"بچے کی فیس اور کتابیں",r4t:"غریب بیٹی کی شادی",r4d:"شادی کا بوجھ ہلکا کریں",
+s2t:"ہمارا روزانہ کا کام",s2s:"آپ کے عطیات سے ہونے والی مدد کی تصویریں۔",w1:"راشن ڈرائیو",w2:"میڈیکل کیمپ",w3:"اسکول فیس",w4:"شادی کا سامان",s3t:"ہمارے ڈونرز کا شکریہ",s3e:"ابھی فہرست خالی ہے۔ پہلا نام آپ کا ہو سکتا ہے۔",
+s4t:"مفت ٹولز",s4s:"سیکنڈوں میں سی وی بنائیں یا تصویر کا سائز بدلیں۔ مفت، بغیر سائن اپ۔",tab_cv:"سی وی میکر",tab_img:"امیج ری سائزر",
+l_name:"پورا نام",l_title:"عہدہ یا پیشہ",l_phone:"فون",l_email:"ای میل",l_addr:"پتا",l_sum:"اپنے بارے میں",l_exp:"تجربہ (ہر لائن میں ایک)",l_edu:"تعلیم (ہر لائن میں ایک)",l_father:"والد کا نام",l_nat:"قومیت",l_cnic:"شناختی کارڈ نمبر",l_cert:"سرٹیفکیٹس (ہر لائن میں ایک)",l_ref:"حوالہ جات (ہر لائن میں ایک)",l_skills:"مہارتیں (کاما سے الگ کریں)",l_lang:"زبانیں (کاما سے الگ کریں)",l_photo:"تصویر (اختیاری)",l_tpl:"انداز",print:"سی وی ڈاؤن لوڈ کریں (PDF)",wait:"پی ڈی ایف بن رہی ہے...",dl:"ڈاؤن لوڈ",dlhtml:"متبادل: ویب پیج کے طور پر محفوظ کریں",
+i_pick:"تصویر چنیں",i_w:"چوڑائی (px)",i_h:"اونچائی (px)",i_lock:"تناسب برقرار رکھیں",i_fmt:"فارمیٹ",i_q:"معیار",i_hint:"شروع کرنے کے لیے تصویر چنیں۔",i_res:"نیا سائز",
+dlg:"عطیہ دیں",tab_pk:"پاکستان",tab_int:"بیرونِ ملک",int_note:"بیرونِ ملک سے بھیج رہے ہیں؟ انٹرنیشنل بینک ٹرانسفر (IBAN اور SWIFT) استعمال کریں، یا دوسرے طریقوں کے لیے واٹس ایپ پر پیغام کریں۔",wa:"رسید واٹس ایپ پر بھیجیں",close:"بند کریں",foot:"انسانیت ویلفیئر ٹرسٹ۔ اللہ آپ کی نیکی قبول فرمائے۔",notice:"ہم ایک نئی کمیونٹی کوشش ہیں اور ابھی رجسٹرڈ ادارہ نہیں ہیں۔",msg:"السلام علیکم! میں نے {n} روپے عطیہ کیے ہیں۔ رسید بھیج رہا/رہی ہوں۔",s3s:"ڈونرز کی اجازت سے۔",ab_t:"ہمارے بارے میں",ab_def:"ہم ایک چھوٹی سی ٹیم ہیں جو مانتے ہیں کہ صرف 100 روپے بھی کسی کے چہرے پر مسکراہٹ لا سکتے ہیں، کسی کا میڈیکل بل ادا کر سکتے ہیں، کسی بچے کی تعلیم میں مدد کر سکتے ہیں، اور کسی غریب بیٹی کی شادی آسان بنا سکتے ہیں۔",a_name:"آپ کا نام",a_role:"عہدہ (جیسے بانی)",a_bio:"اپنے بارے میں چند سطریں",a_photo:"آپ کی تصویر",a_btn:"محفوظ کریں",a_done:"محفوظ ہو گیا۔",th_t:"دل کی گہرائیوں سے شکریہ",th_b:"100 روپے شاید چھوٹے لگیں۔\nمگر کسی کے لیے وہ دسترخوان پر روٹی ہیں، ہاتھ میں دوا ہیں، بچے کے بستے میں کتاب ہیں، اور وہ مسکراہٹ ہیں جو بہت دنوں سے کھوئی ہوئی تھی۔\n\nآپ نے صرف پیسے نہیں دیے۔ آپ نے کسی ایسے انسان کو امید دی ہے جس سے شاید آپ کبھی نہ مل سکیں۔\nہم دعا کرتے ہیں کہ آپ کی ہر نیکی بے حساب خوشیاں بن کر آپ کی طرف لوٹے۔\n\nہمارا ساتھ دینے کا بہت بہت شکریہ۔ اللہ آپ کو جزائے خیر دے۔",d_name:"ڈونر کا نام",d_amt:"رقم (روپے)",d_rec:"رسید کی تصویر (اختیاری)",d_hint:"پہلے ڈونر سے اجازت لیں، اور اپلوڈ کرنے سے پہلے رسید پر اکاؤنٹ اور فون نمبر چھپا دیں۔",d_btn:"ڈونر شامل کریں",d_need:"براہِ کرم نام لکھیں۔",d_done:"ڈونر شامل ہو گیا۔",ol_in:"مالک لاگ ان",ol_out:"لاگ آؤٹ",ol_bad:"اس گوگل اکاؤنٹ کو سائٹ میں تبدیلی کی اجازت نہیں۔",ol_err:"لاگ ان نہیں ہو سکا۔",wall_msg:"کیا آپ اپنا نام اور تصویر ہماری ڈونرز وال پر لگوانا چاہتے ہیں؟ عطیہ دیں، پھر اپنی رسید اور اجازت کے ساتھ ہمیں واٹس ایپ کریں۔",wall_btn:"اجازت کے ساتھ واٹس ایپ کریں",msg3:"السلام علیکم! میں نے عطیہ دیا ہے۔ میں اپنا نام اور تصویر آپ کی ڈونرز وال پر لگانے کی اجازت دیتا/دیتی ہوں۔ میری رسید ساتھ ہے۔",up:"آج کی تصویریں اپلوڈ کریں",uperr:"اپلوڈ نہیں ہو سکی۔ دوبارہ کوشش کریں۔",updone:"ہو گیا! تصویریں محفوظ ہو گئیں۔",nopics:"ابھی یہاں کوئی تصویر نہیں۔"}};
+var $=function(i){return document.getElementById(i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+
+/* Language */
+function setLang(l){L=l;try{localStorage.setItem("lang",l)}catch(e){}
+document.documentElement.lang=l;document.documentElement.dir=l==="ur"?"rtl":"ltr";
+document.querySelectorAll("[data-t]").forEach(function(e){e.textContent=T[l][e.dataset.t]});
+$("lang").textContent=l==="ur"?"English":"اردو";wa();renderG();renderA()}
+function wa(){$("wa").href="https://wa.me/"+PHONE+"?text="+encodeURIComponent(T[L].msg.replace("{n}",amount));$("wa3").href="https://wa.me/"+PHONE+"?text="+encodeURIComponent(T[L].msg3)}
+$("lang").onclick=function(){setLang(L==="ur"?"en":"ur")};
+
+/* Donate dialog */
+var dlg=$("dlg");
+function accts(){var b=$("accts");b.textContent="";mode.forEach(function(a){var r=el("div","acct"),l=el("div"),v=el("strong",null,a[1]);v.dir="ltr";
+l.appendChild(el("small",null,a[0]));l.appendChild(v);var c=el("button",null,"Copy");c.type="button";
+c.onclick=function(){try{navigator.clipboard.writeText(a[1]).then(function(){c.textContent="Done"})}catch(e){}};r.appendChild(l);r.appendChild(c);b.appendChild(r)});
+$("intnote").hidden=mode!==INT;$("tpk").setAttribute("aria-pressed",mode===PK);$("tint").setAttribute("aria-pressed",mode===INT)}
+$("tpk").onclick=function(){mode=PK;accts()};$("tint").onclick=function(){mode=INT;accts()};
+document.querySelectorAll("[data-donate]").forEach(function(b){b.onclick=function(){accts();wa();if(dlg.showModal)dlg.showModal();else dlg.setAttribute("open","")}});
+$("close").onclick=function(){dlg.close()};dlg.addEventListener("click",function(e){if(e.target===dlg)dlg.close()});
+document.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){amount=+c.dataset.a;document.querySelectorAll(".chip").forEach(function(x){x.setAttribute("aria-pressed",x===c)});wa()}});
+
+/* Tool tabs */
+document.querySelectorAll("[data-tool]").forEach(function(t){t.onclick=function(){document.querySelectorAll("[data-tool]").forEach(function(x){x.setAttribute("aria-pressed",x===t);$(x.dataset.tool).hidden=x!==t});fitCv()}});
+
+/* CV maker */
+var photo="";
+function lines(v){return v.split("\n").map(function(s){return s.trim()}).filter(Boolean)}
+function list(a){var u=el("ul");a.forEach(function(x){u.appendChild(el("li",null,x))});return u}
+function chips(a,col){var d=el("div",col?"chips col":"chips");a.forEach(function(x){d.appendChild(el("span",null,x))});return d}
+function sec(p,t,n){var s=el("div");s.appendChild(el("h4",null,t));s.appendChild(n);p.appendChild(s)}
+function csv(v){return v.split(",").map(function(s){return s.trim()}).filter(Boolean)}
+function drawCv(){var g=function(i){return $(i).value.trim()},c=$("cv");c.className=$("c_tpl").value;c.textContent="";
+var h=el("div","cvh");if(photo){var im=new Image();im.src=photo;im.alt="";h.appendChild(im)}
+var hd=el("div");hd.appendChild(el("h1",null,g("c_name")||"Your Name"));if(g("c_title"))hd.appendChild(el("p",null,g("c_title")));h.appendChild(hd);c.appendChild(h);
+var m=el("div","cvm"),a=el("aside"),mn=el("main");
+var ct=[g("c_phone"),g("c_email"),g("c_addr")].filter(Boolean);if(ct.length)sec(a,"Contact",chips(ct,true));
+var pd=[];if(g("c_father"))pd.push("Father’s name: "+g("c_father"));if(g("c_cnic"))pd.push("ID card no.: "+g("c_cnic"));if(g("c_nat"))pd.push("Nationality: "+g("c_nat"));
+if(pd.length)sec(a,"Personal Details",chips(pd,true));
+if(csv(g("c_skills")).length)sec(a,"Skills",chips(csv(g("c_skills"))));if(csv(g("c_lang")).length)sec(a,"Languages",chips(csv(g("c_lang"))));
+if(lines($("c_exp").value).length)sec(mn,"Experience",list(lines($("c_exp").value)));if(lines($("c_edu").value).length)sec(mn,"Education",list(lines($("c_edu").value)));if(lines($("c_cert").value).length)sec(mn,"Certificates",list(lines($("c_cert").value)));if(lines($("c_ref").value).length)sec(mn,"References",list(lines($("c_ref").value)));
+m.appendChild(a);m.appendChild(mn);c.appendChild(m);fitCv()}
+function fitCv(){var b=$("cvbox"),sc=$("cvscale");if(!b||!b.clientWidth)return;var k=Math.min(1,b.clientWidth/794);sc.style.transform="scale("+k+")";b.style.height=Math.ceil(sc.offsetHeight*k)+"px"}
+window.addEventListener("resize",fitCv);
+["c_name","c_title","c_phone","c_email","c_addr","c_exp","c_edu","c_father","c_cnic","c_nat","c_cert","c_ref","c_skills","c_lang","c_tpl"].forEach(function(i){$(i).addEventListener("input",drawCv)});
+$("c_photo").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){photo=r.result;drawCv()};r.readAsDataURL(f)};
+var DL=null;if(window.claude&&claude.use)claude.use("downloads").then(function(d){DL=d}).catch(function(){});
+function prepPrint(){endPrint();var w=document.createElement("div");w.id="printwrap";w.appendChild($("cv").cloneNode(true));document.body.appendChild(w);document.body.classList.add("printing")}
+function endPrint(){var w=$("printwrap");if(w)w.remove();document.body.classList.remove("printing")}
+window.addEventListener("afterprint",endPrint);
+function cvName(){return ($("c_name").value||"").trim().replace(/[^A-Za-z0-9 _-]+/g,"").trim()||"CV"}
+$("printCv").onclick=async function(){var btn=this;
+if(!window.html2pdf){prepPrint();window.print();return}
+btn.disabled=true;btn.textContent=T[L].wait;var y=window.pageYOffset||document.documentElement.scrollTop||0;
+try{window.scrollTo({top:0,left:0,behavior:"instant"});await new Promise(function(r){setTimeout(r,250)});
+var cw=document.documentElement.clientWidth,ch=document.documentElement.clientHeight;
+var blob=await html2pdf().set({margin:0,image:{type:"jpeg",quality:.96},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",scrollX:0,scrollY:0,windowWidth:cw,windowHeight:ch},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}}).from($("cv")).outputPdf("blob");
+if(DL)await DL.save({filename:cvName()+".pdf",data:blob});else{var u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=cvName()+".pdf";document.body.appendChild(a);a.click();a.remove()}}catch(e){}
+window.scrollTo({top:y,left:0,behavior:"instant"});btn.disabled=false;btn.textContent=T[L].print};
+$("dlHtml").onclick=async function(){var css="";
+try{for(var i=0;i<document.styleSheets.length;i++){var rs;try{rs=document.styleSheets[i].cssRules}catch(x){continue}for(var j=0;j<rs.length;j++){if(rs[j].media&&String(rs[j].media.mediaText).indexOf("print")>-1)continue;if(rs[j].cssText.indexOf("#cv")>-1)css+=rs[j].cssText+"\n"}}}catch(x){}
+var nm=cvName();
+var html='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+nm+'</title><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"><style>:root{--line:#d9e5df}body{margin:16px;background:#eee}#cv{max-width:794px;margin:0 auto}.np{text-align:center;margin:0 0 12px}.np button{font:700 15px sans-serif;padding:10px 22px;border:0;border-radius:10px;background:#0e4f3f;color:#fff;cursor:pointer}'+css+'@page{size:A4;margin:0}@media print{.np{display:none}body{margin:0;background:#fff}#cv{width:210mm;max-width:none;min-height:296mm;margin:0;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><div class="np"><button onclick="window.print()">Print / Save as PDF</button></div>'+$("cv").outerHTML+'</body></html>';
+var bl=new Blob([html],{type:"text/html"});if(DL){try{await DL.save({filename:nm+".html",data:bl})}catch(x){}}else{var u=URL.createObjectURL(bl),a=document.createElement("a");a.href=u;a.download=nm+".html";document.body.appendChild(a);a.click();a.remove()}};
+
+/* Image resizer */
+var img=new Image(),ok=false,ratio=1;
+function go(){if(!ok)return;var w=parseInt($("i_w").value),h=parseInt($("i_h").value);if(!w||!h)return;
+var c=document.createElement("canvas");c.width=w;c.height=h;var x=c.getContext("2d"),f=$("i_fmt").value;
+if(f==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,w,h)}x.drawImage(img,0,0,w,h);
+c.toBlob(function(b){var o=$("out");o.textContent="";var u=URL.createObjectURL(b);
+o.appendChild(el("p","sub",T[L].i_res+": "+w+" x "+h+" px, "+Math.round(b.size/1024)+" KB"));
+var a=el("a","btn sm",T[L].dl);a.href=u;a.download="resized."+f.split("/")[1].replace("jpeg","jpg");a.style.display="inline-block";a.style.textDecoration="none";a.onclick=function(e){if(DL){e.preventDefault();DL.save({filename:a.download,data:b}).catch(function(){})}};o.appendChild(a);
+var p=new Image();p.src=u;p.alt="";o.appendChild(p)},f,parseFloat($("i_q").value))}
+$("i_file").onchange=function(){var f=this.files[0];if(!f)return;img.onload=function(){ok=true;ratio=img.width/img.height;$("i_w").value=img.width;$("i_h").value=img.height;go()};img.src=URL.createObjectURL(f)};
+$("i_w").oninput=function(){if($("i_lock").checked&&ok)$("i_h").value=Math.round(this.value/ratio);go()};
+$("i_h").oninput=function(){if($("i_lock").checked&&ok)$("i_w").value=Math.round(this.value*ratio);go()};
+["i_fmt","i_q"].forEach(function(i){$(i).oninput=go});
+
+/* Gallery */
+var CATS=[{id:"w1",e:"🍚"},{id:"w2",e:"🩺"},{id:"w3",e:"🎒"},{id:"w4",e:"🎁"}],P={},META={},cur=null,DB=null,AS=null;
+CATS.forEach(function(c){P[c.id]=(SITE.gallery[c.id]||[]).slice()});
+function renderP(){var gp=$("gp");gp.textContent="";var arr=P[cur]||[];$("gnone").hidden=arr.length>0;
+arr.slice().reverse().forEach(function(u){var w=el("div","gi"),im=new Image();im.src=u;im.alt="";im.loading="lazy";im.onclick=function(){$("lbi").src=u;$("lb").showModal()};w.appendChild(im);
+var id=META[u];if(DB&&AS&&id){var b=el("button","gdel","🗑");b.type="button";b.setAttribute("aria-label","Delete");
+b.onclick=function(e){e.stopPropagation();if(!b.dataset.s){b.dataset.s=1;b.textContent="?";setTimeout(function(){delete b.dataset.s;b.textContent="🗑"},3000);return}
+b.disabled=true;DB.collection("gallery").doc(id).delete().then(function(){return AS.delete(u)}).catch(function(){b.disabled=false})};w.appendChild(b)}
+gp.appendChild(w)})}
+function renderG(){var g=$("ggrid");if(!g)return;g.textContent="";CATS.forEach(function(c){var b=el("button","gt");b.type="button";var a=P[c.id];
+if(a.length){var im=new Image();im.src=a[a.length-1];im.alt="";im.loading="lazy";b.appendChild(im);b.appendChild(el("span","badge","📷 "+a.length))}else b.appendChild(el("div","c0",c.e));
+b.appendChild(el("p",null,T[L][c.id]));b.onclick=function(){openCat(c.id)};g.appendChild(b)});
+if(cur&&$("gdlg").open){$("gt").textContent=T[L][cur];renderP()}}
+function openCat(id){cur=id;$("gt").textContent=T[L][id];$("gadmin").hidden=!(DB&&AS);$("gnote").textContent="";renderP();$("gdlg").showModal()}
+$("gclose").onclick=function(){$("gdlg").close()};$("lbc").onclick=function(){$("lb").close()};
+$("gdlg").addEventListener("click",function(e){if(e.target===this)this.close()});$("lb").addEventListener("click",function(e){if(e.target===this)this.close()});
+$("gfile").onchange=async function(){var fs=[].slice.call(this.files);this.value="";var c=cur,n=$("gnote");
+for(var k=0;k<fs.length;k++){n.textContent=(k+1)+"/"+fs.length+"...";try{var r=await AS.upload(fs[k]);await DB.collection("gallery").add({cat:c,url:r.url,ts:Date.now()})}catch(e){n.textContent=(T[L].uperr+" ("+((e&&e.message)||"")+")");return}}
+n.textContent=T[L].updone};
+/* Donors slider */
+var DON=SITE.donors.map(function(v){return{id:"",name:String(v.name||""),amount:+v.amount||0,url:v.photo||""}}),STATICDON=DON.slice();
+function updAdmin(){var d=$("dadmin");if(d)d.hidden=!(DB&&AS);var a=$("aadmin");if(a)a.hidden=!(DB&&AS)}
+var ABOUT={name:SITE.about.name||"",role:SITE.about.role||"",bio:SITE.about.bio||"",url:SITE.about.photo||""};
+function renderA(){var a=ABOUT;$("abname").textContent=a.name||"Toqeer Qayyum Awan";$("abrole").textContent=a.role;$("abrole").hidden=!a.role;$("abbio").textContent=a.bio||T[L].ab_def;
+var p=$("aph");p.textContent="";if(a.url){var im=new Image();im.src=a.url;im.alt="";p.appendChild(im)}else p.textContent="🤲";
+if(!$("a_nm").value)$("a_nm").value=a.name;if(!$("a_rl").value)$("a_rl").value=a.role;if(!$("a_bio_in").value)$("a_bio_in").value=a.bio}
+function watchA(d){d.collection("about").orderBy("ts").onSnapshot(function(sn){var x=sn.docs[sn.docs.length-1];
+if(x){var v=x.data()||{},g=function(k){return typeof v[k]==="string"?v[k]:""};ABOUT={name:g("name"),role:g("role"),bio:g("bio"),url:g("url")}}renderA()},function(){})}
+$("a_save").onclick=async function(){var n=$("a_note");n.textContent="...";
+try{var url=ABOUT.url||"",f=$("a_file").files[0];if(f){var r=await AS.upload(f);url=r.url}
+await DB.collection("about").add({name:$("a_nm").value.trim(),role:$("a_rl").value.trim(),bio:$("a_bio_in").value.trim(),url:url,ts:Date.now()});
+$("a_file").value="";n.textContent=T[L].a_done}catch(e){n.textContent=(T[L].uperr+" ("+((e&&e.message)||"")+")")}};
+function dcard(v,del){var c=el("div","dc");
+if(v.url){var im=new Image();im.src=v.url;im.alt="";im.loading="lazy";im.onclick=function(){$("lbi").src=v.url;$("lb").showModal()};c.appendChild(im)}else c.appendChild(el("div","av","🤲"));
+var t=el("div");t.appendChild(el("b",null,v.name));if(v.amount>0)t.appendChild(el("span",null,"Rs. "+v.amount.toLocaleString()));c.appendChild(t);
+if(del&&DB&&AS){var b=el("button","ddel","✕");b.type="button";b.setAttribute("aria-label","Delete");
+b.onclick=function(){if(!b.dataset.s){b.dataset.s=1;b.textContent="?";setTimeout(function(){delete b.dataset.s;b.textContent="✕"},3000);return}
+b.disabled=true;DB.collection("donors").doc(v.id).delete().then(function(){if(v.url)return AS.delete(v.url)}).catch(function(){b.disabled=false})};c.appendChild(b)}
+return c}
+function renderD(){var tr=$("dtrack");tr.textContent="";$("dnone").hidden=DON.length>0;$("dsl").hidden=!DON.length;
+var list=DON.slice().reverse(),anim=list.length>=4,half=[];
+for(var r=0;r<(anim?Math.ceil(8/list.length):1);r++)list.forEach(function(v){half.push(v)});
+(anim?[0,1]:[0]).forEach(function(k){half.forEach(function(v){tr.appendChild(dcard(v,k===0))})});
+tr.classList.toggle("still",!anim)}
+function watchD(d){d.collection("donors").orderBy("ts").onSnapshot(function(sn){DON=STATICDON.slice();
+sn.docs.forEach(function(x){var v=x.data();if(v&&typeof v.name==="string")DON.push({id:x.id,name:v.name,amount:+v.amount||0,url:typeof v.url==="string"?v.url:""})});renderD()},function(){})}
+$("d_add").onclick=async function(){var nm=$("d_nm").value.trim(),am=parseInt($("d_am").value)||0,f=$("d_file").files[0],n=$("d_note");
+if(!nm){n.textContent=T[L].d_need;return}n.textContent="...";
+try{var url="";if(f){var r=await AS.upload(f);url=r.url}
+await DB.collection("donors").add({name:nm,amount:am,url:url,ts:Date.now()});
+$("d_nm").value="";$("d_am").value="";$("d_file").value="";n.textContent=T[L].d_done}catch(e){n.textContent=(T[L].uperr+" ("+((e&&e.message)||"")+")")}};
+
+/* ===== Firebase (database + owner login) and Cloudinary (photos) ===== */
+var FIREBASE_CONFIG={apiKey:"AIzaSyBrcp1asxHbUJuZ1C5oBd2WJQAJ63K-0oc",authDomain:"insaniyat-site.firebaseapp.com",projectId:"insaniyat-site",storageBucket:"insaniyat-site.firebasestorage.app",messagingSenderId:"248714128718",appId:"1:248714128718:web:36e4fd3854fb0b7c70c21f"};
+var CLOUD={name:"kstso1un",preset:"insaniyat_upload"},OWNER="toqeeqayyum@gmail.com";
+function shrink(f){return new Promise(function(res){if(!/^image\/(jpeg|png|webp)$/.test(f.type)){res(f);return}
+var u=URL.createObjectURL(f),i=new Image();
+i.onload=function(){var k=Math.min(1,1600/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);
+var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(function(b){res(b||f)},"image/jpeg",.85)};
+i.onerror=function(){URL.revokeObjectURL(u);res(f)};i.src=u})}
+var UP={upload:async function(f){var b=await shrink(f),fd=new FormData();fd.append("file",b,"photo.jpg");fd.append("upload_preset",CLOUD.preset);
+var r=await fetch("https://api.cloudinary.com/v1_1/"+CLOUD.name+"/image/upload",{method:"POST",body:fd}),j={};try{j=await r.json()}catch(x){}
+if(!r.ok||!j.secure_url)throw new Error((j.error&&j.error.message)||("HTTP "+r.status));return{url:j.secure_url}},
+delete:async function(){}};
+function setOwner(ok){var l=$("ownerLink");l.dataset.t=ok?"ol_out":"ol_in";l.textContent=T[L][l.dataset.t]}
+if(window.firebase&&FIREBASE_CONFIG.apiKey){try{
+firebase.initializeApp(FIREBASE_CONFIG);var fdb=firebase.firestore(),auth=firebase.auth();DB=fdb;$("ownerLink").hidden=false;
+watchD(fdb);watchA(fdb);
+fdb.collection("gallery").orderBy("ts").onSnapshot(function(sn){CATS.forEach(function(c){P[c.id]=(SITE.gallery[c.id]||[]).slice()});META={};
+sn.docs.forEach(function(x){var v=x.data();if(v&&P[v.cat]&&typeof v.url==="string"){P[v.cat].push(v.url);META[v.url]=x.id}});renderG()},function(){});
+auth.onAuthStateChanged(function(u){var ok=!!(u&&u.email===OWNER&&u.emailVerified);AS=ok?UP:null;
+if(u&&!ok){$("olmsg").textContent=T[L].ol_bad;auth.signOut()}else if(ok)$("olmsg").textContent="";
+setOwner(ok);updAdmin();renderG();renderD();renderA()});
+$("ownerLink").onclick=function(e){e.preventDefault();$("olmsg").textContent="";if(AS){auth.signOut();return}
+var pr=new firebase.auth.GoogleAuthProvider();auth.signInWithPopup(pr).catch(function(er){if(er&&er.code==="auth/popup-blocked")auth.signInWithRedirect(pr);else $("olmsg").textContent=T[L].ol_err+" ("+((er&&(er.code||er.message))||"")+")"})}
+}catch(err){}}
+
+var saved="";try{saved=localStorage.getItem("lang")||""}catch(e){}
+setLang(saved||((navigator.language||"").indexOf("ur")===0?"ur":"en"));drawCv();renderD();
+</script>
+</body>
+</html>
